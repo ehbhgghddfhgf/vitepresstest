@@ -29,24 +29,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm install
-
-      - name: Install docs dependencies
-        run: npm --prefix docs install
-
-      - name: Build docs
-        run: npm run docs:build
 
       - name: Build playground
         run: npm run build:playground
-
-      - name: Prepare deploy folder
-        run: |
-          mkdir dist
-          cp -r docs/.vitepress/dist/* dist/
-          mkdir dist/playground
-          cp -r dist-playground/* dist/playground/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -54,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './dist-playground'
 
       - name: Deploy to GitHub Pages
         id: deployment
