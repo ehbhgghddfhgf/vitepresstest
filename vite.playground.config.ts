@@ -6,7 +6,7 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [vue()],
   root: resolve(__dirname, 'playground'),
-  base: '/vue-form-validator/playground/',
+  base: '/vite-press-test/playground/',
   build: {
     outDir: '../dist-playground',
   },
