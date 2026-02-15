@@ -1,32 +1,32 @@
-# ⚡ Кэширование валидации
+# ⚡ Validation Caching
 
-Библиотека автоматически кэширует результаты валидации для повышения производительности. Кэш очищается автоматически при:
+The library automatically caches validation results to boost performance. The cache is invalidated automatically when:
 
-- Изменении значения поля
-- Отметке поля как затронутого (`touch`)
-- Вызове `clearCache(fieldName)`
+- A field's value changes
+- A field is marked as (`touch`)
+- `clearCache(fieldName)` is manually called
 
-## Автоматическая очистка кэша
+## Automatic Cache Invalidation
 
-Кэш очищается автоматически в этих методах:
+The cache is automatically cleared within these methods:
 
-- `setValues()` - для всех изменяемых полей
-- `toggleArrayItem()`, `addArrayItem()`, `removeArrayItem()` - для массивов
-- При изменении значений через `v-model`
+- `setValues()` - for all modified fields
+- `toggleArrayItem()`, `addArrayItem()`, `removeArrayItem()` - for arrays
+- Whenever values are changed via `v-model`
 
-## Когда нужно очищать кэш вручную
+## When to Clear Cache Manually
 
-В большинстве случаев кэш очищается автоматически. Ручная очистка нужна только при:
+In most scenarios, the cache is managed automatically. Manual clearing is only required during:
 
 ```typescript
-// Прямых манипуляциях с реактивными данными (не рекомендуется)
-form.val.tags.push('newItem') // вместо этого используйте addArrayItem
-form.clearCache('tags') // в таких случаях нужна ручная очистка
+// 1. Direct manipulation of reactive data (Not recommended)
+form.val.tags.push('newItem') // Use addArrayItem instead
+form.clearCache('tags')       // Manual clearing is necessary here
 
-// Крайне редких случаях отладки
-form.clearCache() // очистить весь кэш
+// 2. Rare debugging scenarios
+form.clearCache()             // Clear the entire cache
 ```
 
-**Рекомендация**: Используйте встроенные методы (`setValues`, `addArrayItem`, etc.) - они автоматически управляют кэшем.
+**Recommendation**: Always use built-in methods (`setValues`, `addArrayItem`, etc.) as they handle cache management out of the box.
 
-**Пример реальной проблемы**: При удалении всех элементов из массива через `splice()` напрямую, кэш может содержать старый результат валидации. Решение - использовать `removeArrayItem()` или очистить кэш вручную.
+**Real-world issue example**: If you remove elements from an array using `splice()` directly, the cache might retain stale validation results. To fix this, use `removeArrayItem()` or clear the cache manually.

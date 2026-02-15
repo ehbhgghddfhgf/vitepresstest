@@ -1,127 +1,127 @@
-# 📖 Справочник API
+# 📖 API Reference
 
 ## `createForm(initialValues, rulesBuilder, options?)`
 
-Создает реактивную форму с валидацией.
+Creates a reactive form instance with integrated validation.
 
-**Параметры:**
+**Parameters:**
 
-- `initialValues` - Начальные значения формы (поддерживает вывод типов)
-- `rulesBuilder` - Функция-строитель правил `(r, define) => define({...})` или реактивный computed `computed(() => { const r = createRules(); return {...} })` для i18n
-- `options` - Дополнительные настройки
+- `initialValues` -Initial form values (supports type inference)
+- `rulesBuilder` - A rule builder function `(r, define) => define({...})` or a reactive `computed(() => { const r = createRules(); return {...} })` for i18n support
+- `options` - Optional configuration object
 
-**Настройки:**
+**Configuration Options:**
 
-- `onSubmit?` - Обработчик отправки формы
-- `onClear?` - Обработчик очистки формы
+- `onSubmit?` - Callback triggered upon successful form submission
+- `onClear?` - Callback triggered when the form is cleared
 
-**Возвращает:** Экземпляр формы с реактивными свойствами и методами
+**Returns:** A form instance with reactive properties and utility methods
 
-**Поддерживаемые возможности:**
+**Key Features:**
 
-- Поддержка вложенных путей типа `'contacts.0.email'`
-- Методы `arrayPath()` и `objectPath()` для типобезопасного построения путей
-- Управление массивами: `addArrayItem()`, `removeArrayItem()`, `toggleArrayItem()`
-- Автоматическая оптимизация в зависимости от структуры данных
+- Supports nested paths like `'contacts.0.email'`
+- Type-safe path construction via `arrayPath()` and `objectPath()`
+- Built-in array management: `addArrayItem()`, `removeArrayItem()`, `toggleArrayItem()`
+- Automatic performance optimization based on data structure
 
-## Свойства и методы формы
+## Form Properties and Methods
 
-### Реактивное состояние
+### Reactive State
 
-| Свойство        | Тип                             | Описание                                           |
-| --------------- | ------------------------------- | -------------------------------------------------- |
-| `values`        | `Ref<T>`                        | Текущие значения формы (реактивный ref)            |
-| `val`           | `T`                             | Геттер для удобного доступа к значениям (в script) |
-| `errors`        | `Ref<Record<string, string[]>>` | Ошибки валидации по полям                          |
-| `touched`       | `Ref<Record<string, boolean>>`  | Состояние "тронутости" полей                       |
-| `dirty`         | `Ref<Record<string, boolean>>`  | Измененные поля                                    |
-| `isValidating`  | `Ref<Record<string, boolean>>`  | Поля в процессе валидации                          |
-| `isSubmitting`  | `Ref<boolean>`                  | Статус отправки формы                              |
-| `isValid`       | `ComputedRef<boolean>`          | Валидность всей формы                              |
-| `isDirty`       | `ComputedRef<boolean>`          | Наличие несохраненных изменений                    |
-| `hasAnyErrors`  | `ComputedRef<boolean>`          | Наличие ошибок в форме                             |
-| `touchedFields` | `ComputedRef<string[]>`         | Список "тронутых" полей                            |
-| `dirtyFields`   | `ComputedRef<string[]>`         | Список измененных полей                            |
+| Property        | Type                            | Description                                            |
+| --------------- | ------------------------------- | ------------------------------------------------------ |
+| `values`        | `Ref<T>`                        | Reactive reference to current form values              |
+| `val`           | `T`                             | Getter for convenient value access (from script)       |
+| `errors`        | `Ref<Record<string, string[]>>` | Validation errors indexed by field name                |
+| `touched`       | `Ref<Record<string, boolean>>`  | Tracks which fields have been interacted with          |
+| `dirty`         | `Ref<Record<string, boolean>>`  | Tracks which fields have been modified                 |
+| `isValidating`  | `Ref<Record<string, boolean>>`  | Indicates fields currently undergoing async validation |
+| `isSubmitting`  | `Ref<boolean>`                  | Global form submission status                          |
+| `isValid`       | `ComputedRef<boolean>`          | `true` if the entire form is valid                     |
+| `isDirty`       | `ComputedRef<boolean>`          | `true` if any field has unsaved changes                |
+| `hasAnyErrors`  | `ComputedRef<boolean>`          | `true` if there is at least one validation error       |
+| `touchedFields` | `ComputedRef<string[]>`         | List of all touched field paths                        |
+| `dirtyFields`   | `ComputedRef<string[]>`         | List of all modified field paths                       |
 
-### Методы валидации
+### Validation Methods
 
-| Метод                 | Описание                                             |
-| --------------------- | ---------------------------------------------------- |
-| `setRules(rules)`     | Установить правила валидации                         |
-| `validateField(name)` | Валидировать поле (обычное или вложенное)            |
-| `validateForm()`      | Валидировать всю форму                               |
-| `submit()`            | Отправить форму после валидации                      |
-| `touch(field)`        | Отметить поле как "тронутое" (обычное или вложенное) |
+| Method                | Description                                                               |
+| --------------------- | ------------------------------------------------------------------------- |
+| `setRules(rules)`     | Updates validation rules dynamically                                      |
+| `validateField(name)` | Manually triggers validation for a specific field (supports nested paths) |
+| `validateForm()`      | Triggers validation for all form fields                                   |
+| `submit()`            | Validates the form and triggers onSubmit if successful                    |
+| `touch(field)`        | Marks a field (flat or nested) as "touched"                               |
 
-### Управление состоянием
+### State Management
 
-| Метод                | Описание                             |
-| -------------------- | ------------------------------------ |
-| `setValues(values)`  | Обновить значения полей              |
-| `getValues()`        | Получить копию текущих значений      |
-| `clear(useInitial?)` | Очистить форму                       |
-| `reset(newValues?)`  | Сбросить форму к начальным значениям |
-| `resetState()`       | Сбросить состояние валидации         |
-| `setErrors(errors)`  | Установить ошибки для полей          |
-| `resetErrors()`      | Очистить все ошибки                  |
+| Method               | Description                                        |
+| -------------------- | -------------------------------------------------- |
+| `setValues(values)`  | Updates field values                               |
+| `getValues()`        | Returns a deep copy of current values              |
+| `clear(useInitial?)` | Clears the form data                               |
+| `reset(newValues?)`  | Resets the form to initial or provided values      |
+| `resetState()`       | Resets the validation state (touched, dirty, etc.) |
+| `setErrors(errors)`  | Manually sets errors for specific fields           |
+| `resetErrors()`      | Clears all current validation errors               |
 
-### Проверка состояния полей
+### Field Status Checks
 
-**Унифицированные методы (работают с обычными и вложенными полями):**
+**Unified Methods (compatible with flat and nested paths):**
 
-| Метод                   | Возврат          | Описание                           |
-| ----------------------- | ---------------- | ---------------------------------- |
-| `hasError(field)`       | `boolean`        | Есть ли ошибки в поле              |
-| `error(field)`          | `string \| null` | Первая ошибка поля                 |
-| `allErrors(field)`      | `string[]`       | Все ошибки поля                    |
-| `isTouched(field)`      | `boolean`        | Было ли поле "тронуто"             |
-| `validating(field)`     | `boolean`        | Валидируется ли поле               |
-| `isFieldDirty(field)`   | `boolean`        | Изменено ли поле                   |
-| `getFieldStatus(field)` | `FieldStatus`    | Полная информация о состоянии поля |
+| Method                  | Returns          | Description                                    |
+| ----------------------- | ---------------- | ---------------------------------------------- |
+| `hasError(field)`       | `boolean`        | Checks if a field has any errors               |
+| `error(field)`          | `string \| null` | Returns the first error message for a field    |
+| `allErrors(field)`      | `string[]`       | Returns all error messages for a field         |
+| `isTouched(field)`      | `boolean`        | Checks if a field has been touched             |
+| `validating(field)`     | `boolean`        | Checks if a field is currently being validated |
+| `isFieldDirty(field)`   | `boolean`        | Checks if a field's value has changed          |
+| `getFieldStatus(field)` | `FieldStatus`    | Returns the complete status object for a field |
 
-**Примеры использования:**
+**Usage Examples:**
 
 ```typescript
-// Обычные поля
+// Standard fields
 form.hasError('email')
 form.error('name')
 
-// Вложенные пути
+// Nested paths
 form.hasError('contacts.0.email')
 form.error('address.street')
 
-// С автодополнением через helper'ы
+// Type-safe path helpers
 form.hasError(form.arrayPath('contacts', 0, 'email'))
 form.error(form.objectPath('address', 'street'))
 ```
 
-### Работа с вложенными структурами
+### Nested Structure Management
 
-| Метод                                    | Описание                                         |
-| ---------------------------------------- | ------------------------------------------------ |
-| `addArrayItem(arrayPath, item)`          | Добавить элемент в массив                        |
-| `removeArrayItem(arrayPath, index)`      | Удалить элемент из массива                       |
-| `toggleArrayItem(arrayPath, item)`       | Переключить элемент в массиве (добавить/удалить) |
-| `arrayIncludes(arrayPath, item)`         | Проверить содержится ли элемент в массиве        |
-| `arrayPath(arrayField, index, property)` | Построить типобезопасный путь к элементу массива |
-| `objectPath(objectField, property)`      | Построить типобезопасный путь к свойству объекта |
+| Method                                   | Description                                            |
+| ---------------------------------------- | ------------------------------------------------------ |
+| `addArrayItem(arrayPath, item)`          | Appends an item to a target array                      |
+| `removeArrayItem(arrayPath, index)`      | Removes an item from an array at a specific index      |
+| `toggleArrayItem(arrayPath, item)`       | Adds an item if it doesn't exist, otherwise removes it |
+| `arrayIncludes(arrayPath, item)`         | Checks if an array contains a specific item            |
+| `arrayPath(arrayField, index, property)` | Generates a type-safe path for an array element        |
+| `objectPath(objectField, property)`      | Generates a type-safe path for an object property      |
 
-### Файловые утилиты
+### File Utilities
 
-| Свойство                    | Описание                                            |
-| --------------------------- | --------------------------------------------------- |
-| `file.{fieldName}.files`    | `ComputedRef<File[]>` - Список файлов               |
-| `file.{fieldName}.fileInfo` | `ComputedRef<FileInfo[]>` - Информация о файлах     |
-| `file.{fieldName}.handler`  | `(event: Event) => void` - Обработчик выбора файлов |
-| `file.{fieldName}.clear`    | `() => void` - Очистить выбранные файлы и DOM input |
+| Property                    | Description                                              |
+| --------------------------- | -------------------------------------------------------- |
+| `file.{fieldName}.files`    | `ComputedRef<File[]>` - List of selected files           |
+| `file.{fieldName}.fileInfo` | `ComputedRef<FileInfo[]>` - Detailed file metadata       |
+| `file.{fieldName}.handler`  | `(event: Event) => void` - Event handler for file inputs |
+| `file.{fieldName}.clear`    | `() => void` - Resets selected files and the DOM input   |
 
-**Note:** Helpers создаются лениво при первом обращении. Для множественного выбора установите `multiple` на `<input type="file">` — библиотека определит это автоматически по событию ввода.
+**Note:** Helpers are lazily initialized. For multiple file selection, ensure the `<input type="file">` has the `multiple` attribute; the library detects this automatically from the input event.
 
-**Важно:** Метод `clear()` полностью очищает файловые поля - как значение в форме, так и визуальное отображение в DOM input элементе. Это предотвращает ситуацию, когда после `clear()` файл исчезает из формы, но остается отображаться в input.
+**Important:** The `clear()` method synchronizes the form state with the UI by resetting the actual DOM input element value, preventing "ghost" file names from appearing in the input after they were removed from the form.
 
-### Продвинутые методы
+### Advanced Methods
 
-| Метод                | Описание                                                  |
-| -------------------- | --------------------------------------------------------- |
-| `clearCache(field?)` | Очистить кэш валидации (поля или весь кэш)                |
-| `dispose()`          | Остановить watchers и очистить ресурсы (авто при unmount) |
+| Method               | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `clearCache(field?)` | Clears the validation cache for a specific field or the entire form         |
+| `dispose()`          | Stops all watchers and releases resources (called automatically on unmount) |

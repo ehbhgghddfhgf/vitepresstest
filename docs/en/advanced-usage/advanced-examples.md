@@ -1,6 +1,6 @@
-# 🎯 Продвинутые примеры
+# 🎯 Advanced Examples
 
-## Условная валидация
+## Conditional Validation
 
 ```typescript
 createForm({ type: '', companyName: '' }, (r, define) =>
@@ -11,7 +11,7 @@ createForm({ type: '', companyName: '' }, (r, define) =>
 )
 ```
 
-## Асинхронная проверка имени пользователя
+## Async Username Availability Check
 
 ```typescript
 createForm({ username: '' }, (r, define) =>
@@ -21,13 +21,13 @@ createForm({ username: '' }, (r, define) =>
       .minLength(3)
       .remote(
         async name => !(await fetch(`/api/users/${name}`)).ok,
-        'Имя пользователя уже занято'
+        'Username is already taken'
       ),
   })
 )
 ```
 
-## Валидация диапазона дат
+## Date Range Validation
 
 ```typescript
 createForm({ startDate: '', endDate: '' }, (r, define) =>
@@ -38,9 +38,9 @@ createForm({ startDate: '', endDate: '' }, (r, define) =>
 )
 ```
 
-## Универсальная форма для создания и редактирования
+## Universal Create & Edit Form
 
-Одна и та же форма для создания и редактирования. Ключевой момент — при загрузке данных используйте `reset()`, а не `setValues()`, чтобы обновить baseline и `isDirty` оставался `false`.
+A single form can handle both creation and updates. The key point: when loading data, use `reset()` instead of `setValues()`. This updates the baseline, ensuring `isDirty` remains `false` until the user makes new changes.
 
 ```vue
 <script setup lang="ts">
@@ -97,7 +97,7 @@ const form = createForm(
   }
 )
 
-// Загрузка данных: reset() обновляет baseline, форма остаётся чистой
+// Data Loading: reset() updates the baseline so the form remains "clean" (not dirty)
 onMounted(async () => {
   if (userId.value) {
     const { name, email } = await fetch(`/api/users/${userId.value}`).then(r =>
@@ -113,7 +113,7 @@ onMounted(async () => {
     <input
       v-model="form.values.name"
       @blur="form.touch('name')"
-      placeholder="Имя"
+      placeholder="Name"
     />
     <span v-if="form.hasError('name')">{{ form.error('name') }}</span>
 
@@ -132,17 +132,17 @@ onMounted(async () => {
     >
       {{
         form.isSubmitting
-          ? 'Сохранение...'
+          ? 'Saving...'
           : isEditMode
-            ? 'Сохранить'
-            : 'Создать'
+            ? 'Save Changes'
+            : 'Create'
       }}
     </button>
   </form>
 </template>
 ```
 
-## Установка ошибок полям
+## Setting Field Errors Manually
 
 ```typescript
 const form = createForm({ username: '', email: '' }, (r, define) =>
@@ -152,26 +152,26 @@ const form = createForm({ username: '', email: '' }, (r, define) =>
   })
 )
 
-// Установить ошибку для одного поля
-form.setErrors({ username: ['Это имя пользователя уже занято'] })
+// Set error for a single field
+form.setErrors({ username: ['This username is already taken'] })
 
-// Установить ошибки для нескольких полей
+// Set errors for multiple fields
 form.setErrors({
-  username: ['Недопустимые символы в имени'],
-  email: ['Email уже зарегистрирован', 'Неверный формат email'],
+  username: ['Invalid characters in name'],
+  email: ['Email already registered', 'Invalid format'],
 })
 
-// Очистить все ошибки
+// Clear all errors
 form.resetErrors()
 
-// Проверить наличие ошибки
+// Check error status
 if (form.hasError('username')) {
-  console.log(form.error('username')) // Первая ошибка
-  console.log(form.allErrors('username')) // Все ошибки поля
+  console.log(form.error('username'))     // Get the first error
+  console.log(form.allErrors('username')) // Get all errors for this field
 }
 ```
 
-Типичный паттерн обработки серверных ошибок — внутри `onSubmit`:
+A typical pattern for handling server-side errors within `onSubmit`:
 
 ```typescript
 const form = createForm(
@@ -187,13 +187,13 @@ const form = createForm(
       })
 
       if (!res.ok) {
-        // Сервер возвращает: { fieldErrors: { email: ['Уже существует'] } }
+        // Expected server response: { fieldErrors: { email: ['Already exists'] } }
         const { fieldErrors } = await res.json()
         if (fieldErrors) form.setErrors(fieldErrors)
         return
       }
 
-      console.log('Создан:', await res.json())
+      console.log('User created:', await res.json())
     },
   }
 )

@@ -1,6 +1,6 @@
-# 📂 Загрузка файлов
+# 📂 File Uploads
 
-## Конфигурация
+## Configuration
 
 ```typescript
 import { createForm } from '@sakhnovkrg/vue-form-validator'
@@ -21,27 +21,27 @@ const form = createForm(
 )
 ```
 
-## Использование
+## Usage
 
 ```vue
 <template>
-  <!-- Один файл -->
+  <!-- Single file -->
   <input type="file" @change="form.file.avatar.handler" />
   <div v-if="form.file.avatar.files.value.length">
-    Выбран: {{ form.file.avatar.fileInfo.value[0]?.name }}
-    <button @click="form.file.avatar.clear()">Удалить</button>
+    Selected: {{ form.file.avatar.fileInfo.value[0]?.name }}
+    <button @click="form.file.avatar.clear()">Remove</button>
   </div>
 
-  <!-- Множественные файлы -->
+  <!-- FileList -->
   <input type="file" multiple @change="form.file.documents.handler" />
   <div v-if="form.file.documents.files.value.length">
-    <p>Файлов: {{ form.file.documents.files.value.length }}</p>
+    <p>Files selected: {{ form.file.documents.files.value.length }}</p>
     <ul>
       <li v-for="file in form.file.documents.fileInfo.value" :key="file.name">
         {{ file.name }} ({{ file.formattedSize }})
       </li>
     </ul>
-    <button @click="form.file.documents.clear()">Очистить все</button>
+    <button @click="form.file.documents.clear()">Clear all</button>
   </div>
 </template>
 ```

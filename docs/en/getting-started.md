@@ -65,7 +65,7 @@ const {
     }),
   {
     async onSubmit(values) {
-      console.log('Форма отправлена:', values)
+      console.log('Form has sent:', values)
     },
   }
 )
@@ -89,7 +89,7 @@ const {
         v-model="values.password"
         @blur="touch('password')"
         type="password"
-        placeholder="Пароль"
+        placeholder="Password"
       />
       <span v-if="hasError('password')" class="error">
         {{ error('password') }}
@@ -97,7 +97,7 @@ const {
     </div>
 
     <button type="submit" :disabled="!isDirty || !isValid || isSubmitting">
-      {{ isSubmitting ? 'Отправка...' : 'Отправить' }}
+      {{ isSubmitting ? 'Sending...' : 'Send' }}
     </button>
   </form>
 </template>

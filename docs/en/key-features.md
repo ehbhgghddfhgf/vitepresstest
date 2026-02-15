@@ -1,49 +1,49 @@
 # ✨ Key Features
 
-- 🚀 **Без зависимостей** - Легкая и быстрая (~6kB gzipped)
-- 🦄 **Типобезопасность** - Полная поддержка TypeScript с автодополнением
-- 📋 **Декларативность** - Вся форма определяется в одном месте: структура, валидация и обработка
-- 🎯 **Интуитивный API** - Простые и понятные методы для работы с формами
-- 🔄 **Реактивность** - Валидация в реальном времени с реактивностью Vue
-- 🌍 **Интернационализация** - Поддержка реактивных сообщений об ошибках
-- 📂 **Загрузка файлов** - Встроенная валидация файлов с хелперами
-- 📝 **Динамические массивы** - Поддержка валидации массивов объектов
-- ⚡ **Асинхронная валидация** - Удаленная валидация с debouncing
-- 🔗 **Кросс-полевая валидация** - Зависимости полей и сравнения
-- 🎨 **Гибкость** - Кастомные правила и условная валидация
+- 🚀 **Zero Dependencies** - Lightweight and fast (~6kB gzipped)
+- 🦄 **Type Safe** - Full TypeScript support with robust autocompletion
+- 📋 **Declarative** - Define your entire form in one place: structure, validation, and submission logic
+- 🎯 **Intuitive API** - Simple and clean methods for form management
+- 🔄 **Reactive** - Real-time validation powered by Vue's reactivity system
+- 🌍 **I18n Support** - Built-in support for reactive localized error messages
+- 📂 **File Handling** - Integrated file validation with convenient helpers
+- 📝 **Dynamic Arrays** - Native support for validating arrays of objects
+- ⚡ **Async Validation** - Remote checks with built-in debouncing
+- 🔗 **Cross-field Validation** - Handle field dependencies and value comparisons with ease
+- 🎨 **Flexible** - Custom rules and conditional validation logic
 
-## 🎯 Декларативный подход
+## 🎯 Declarative Approach
 
-Вся логика формы определяется в одном вызове `createForm()`:
+All form logic is defined within a single `createForm()` call:
 
 ```typescript
 import { createForm } from '@sakhnovkrg/vue-form-validator'
 
 const form = createForm(
-  // 1. Структура данных
+  // 1. Data Structure
   { email: '', password: '' },
-  // 2. Правила валидации
+  // 2. Validation Rules
   (r, define) =>
     define({
       email: r.required().email(),
       password: r.required().minLength(8),
     }),
-  // 3. Обработчики событий
+  // 3. Event Handlers
   {
     onSubmit: values => {
-      /* отправка формы */
+      /* handle form submission */
     },
   }
 )
 ```
 
-## 🧬 Умная типизация
+## 🧬 Smart Typing
 
-Библиотека спроектирована с особым вниманием к типобезопасности. `createForm` поддерживает как простые, так и вложенные структуры данных.
+The library is built with a "Type-First" philosophy. `createForm` supports both flat and deeply nested data structures.
 
-TypeScript контролирует корректность имен полей на всех уровнях:
+TypeScript ensures field name correctness at every level:
 
-**Для основных полей формы (строгая типизация):**
+**For primary form fields (Strict Typing):**
 
 ```typescript
 const form = createForm({
@@ -51,12 +51,12 @@ const form = createForm({
   password: ''
 }, ...)
 
-form.error('email')    // ✅ Корректно - поле существует
-form.error('invalid')  // ❌ Ошибка TypeScript - поле не существует
-form.hasError('password') // ✅ Корректно с автодополнением
+form.error('email')       // ✅ Valid - field exists
+form.error('invalid')     // ❌ TypeScript Error - field does not exist
+form.hasError('password') // ✅ Valid with autocompletion
 ```
 
-**Для вложенных полей массивов и объектов (продвинутая типизация):**
+**For nested arrays and objects (Advanced Typing):**
 
 ```typescript
 const form = createForm({
@@ -64,28 +64,28 @@ const form = createForm({
   address: { street: '', city: '' }
 }, ...)
 
-// ✅ TypeScript автоматически выводит допустимые пути:
+// ✅ TypeScript automatically infers valid paths:
 form.hasError('contacts.0.name')    // contacts.${number}.name
 form.hasError('contacts.0.email')   // contacts.${number}.email
 form.hasError('address.street')     // address.street
 form.hasError('address.city')       // address.city
 
-// ❌ TypeScript не позволит указать несуществующие пути:
-form.hasError('contacts.0.invalid') // Ошибка компиляции!
-form.hasError('address.invalid')    // Ошибка компиляции!
+// ❌ TypeScript prevents invalid paths:
+form.hasError('contacts.0.invalid') // Compilation error!
+form.hasError('address.invalid')    // Compilation error!
 
-// ✅ Для автодополнения используйте helper'ы:
-form.hasError(form.arrayPath('contacts', 0, 'name'))   // автодополнение
-form.hasError(form.objectPath('address', 'street'))    // автодополнение
+// ✅ Use helpers for enhanced autocompletion:
+form.hasError(form.arrayPath('contacts', 0, 'name'))   // type-safe autocompletion
+form.hasError(form.objectPath('address', 'street'))    // type-safe autocompletion
 ```
 
-Типы автоматически выводятся из начальных значений, обеспечивая полную типобезопасность на всех уровнях API.
+Types are automatically inferred from initial values, providing end-to-end type safety across the entire API.
 
-## ⚡ Поддерживаемые структуры данных
+## ⚡ Supported Data Structures
 
-`createForm` поддерживает все типы структур данных:
+`createForm` handles all types of data structures out of the box:
 
-- ✅ **Простые поля** - `string`, `number`, `boolean`, `File`, `File[]`
-- ✅ **Массивы объектов** - динамические списки с валидацией элементов
-- ✅ **Вложенные объекты** - многоуровневые структуры данных
-- ✅ **Смешанные структуры** - комбинации простых полей, массивов и объектов
+- ✅ **Simple Fields** - `string`, `number`, `boolean`, `File`, `File[]`
+- ✅ **Arrays of Objects** - Dynamic lists with per-element validation
+- ✅ **Nested Objects** - Deeply nested data trees
+- ✅ **Mixed Structures** - Any combination of primitives, arrays, and objects

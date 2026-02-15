@@ -1,67 +1,67 @@
-# 🛠️ Встроенные правила валидации
+# 🛠️ Built-in Validation Rules
 
-## Базовые правила
+## Base Rules
 
 ```typescript
-r.required('Кастомное сообщение') // Обязательное поле
-r.email() // Валидный email
-r.minLength(5) // Минимальная длина
-r.maxLength(100) // Максимальная длина
-r.numeric() // Только цифры
-r.regex(/pattern/, 'сообщение') // Кастомный regex
-r.oneOf(['a', 'b', 'c']) // Должно быть одним из значений
+r.required('Custom message')      // Field is mandatory
+r.email()                         // Valid email format
+r.minLength(5)                    // Minimum string length
+r.maxLength(100)                  // Maximum string length
+r.numeric()                       // Only digits allowed
+r.regex(/pattern/, 'message')     // Custom regex pattern
+r.oneOf(['a', 'b', 'c'])          // Must be one of the specified values
 ```
 
-## Числовые правила
+## Numeric Rules
 
 ```typescript
-r.minValue(0) // Минимальное значение
-r.maxValue(100) // Максимальное значение
-r.between(0, 100) // Диапазон значений
+r.minValue(0)                     // Minimum value
+r.maxValue(100)                   // Maximum value
+r.between(0, 100)                 // Inclusive range of values
 ```
 
-## Кросс-полевые правила
+## Cross-field Rules
 
 ```typescript
-r.sameAs('password') // Должно совпадать с другим полем
-r.dateAfter('startDate') // Дата должна быть после другого поля
-r.requiredIf('type', 'business') // Обязательно при условии
+r.sameAs('password')              // Must match another field's value
+r.dateAfter('startDate')          // Date must be after another field's date
+r.requiredIf('type', 'business')  // Required if another field matches a specific value
 ```
 
-## Правила файлов
+## File Rules
 
 ```typescript
-r.fileRequired() // Выбор файла обязателен
-r.fileSize(5 * 1024 * 1024) // Максимальный размер файла (5MB)
-r.fileType(['.jpg', '.png']) // Разрешенные типы файлов
-r.fileCount(1, 5) // Диапазон количества файлов
+r.fileRequired()                  // File selection is mandatory
+r.fileSize(5 * 1024 * 1024)       // Maximum file size (5MB)
+r.fileType(['.jpg', '.png'])      // Allowed file extensions
+r.fileCount(1, 5)                 // Range for number of files
 ```
 
-## Правила массивов
+## Array Rules
 
 ```typescript
-r.arrayRequired() // Проверяет, что значение — массив и в нём есть хотя бы один элемент
-r.arrayMinLength(1) // Минимальная длина массива
-r.arrayMaxLength(10) // Максимальная длина массива
+r.arrayRequired()                 // Checks if value is an array with at least one element
+r.arrayMinLength(1)               // Minimum array length
+r.arrayMaxLength(10)              // Maximum array length
 ```
 
-**Примечание**: `arrayRequired()` и `arrayMinLength(1)` работают одинаково, но `arrayRequired()` предоставляет более семантичное название для обязательных массивов.
+**Note**: `arrayRequired()` and `arrayMinLength(1)` function identically, but `arrayRequired()` provides a more semantic name for mandatory arrays.
 
-## Продвинутые правила
+## Advanced Rules
 
 ```typescript
-// Удаленная валидация с debouncing
+// Remote validation with debouncing
 r.remote(
   async username => {
     const response = await fetch(`/api/check-username/${username}`)
     return response.ok
   },
-  'Имя пользователя уже занято',
+  'Username is already taken',
   500
 )
 
-// Кастомная валидация
+// Custom validation
 r.custom((value, allValues) => {
   return value.includes(allValues.domain)
-}, 'Неверный формат')
+}, 'Invalid format')
 ```

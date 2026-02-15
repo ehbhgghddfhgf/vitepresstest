@@ -1,8 +1,8 @@
-# 📝 Вложенные структуры данных
+# 📝 Nested Data Structures
 
-Библиотека поддерживает валидацию динамических массивов и вложенных объектов с типобезопасным API.
+The library supports the validation of dynamic arrays and nested objects with a fully type-safe API.
 
-## Динамические массивы
+## Dynamic Arrays
 
 ```typescript
 interface Contact {
@@ -19,18 +19,19 @@ const form = createForm(
   r => ({
     teamName: r.required(),
     contacts: r.arrayMinLength(1),
+    // Wildcard notation for array elements
     'contacts.*.name': r.required(),
     'contacts.*.email': r.required().email(),
     'contacts.*.role': r.required(),
   })
 )
 
-// Управление массивом
+// Array management
 form.addArrayItem('contacts', { name: '', email: '', role: '' })
 form.removeArrayItem('contacts', index)
 ```
 
-**Пример компонента:**
+**Component Example:**
 
 ```vue
 <template>
@@ -43,18 +44,18 @@ form.removeArrayItem('contacts', index)
       {{ form.error(form.arrayPath('contacts', index, 'name')) }}
     </span>
 
-    <button @click="form.removeArrayItem('contacts', index)">Удалить</button>
+    <button @click="form.removeArrayItem('contacts', index)">Delete</button>
   </div>
 
   <button
     @click="form.addArrayItem('contacts', { name: '', email: '', role: '' })"
   >
-    Добавить контакт
+    Add Contact
   </button>
 </template>
 ```
 
-## Вложенные объекты
+## Nested Objects
 
 ```typescript
 const form = createForm(
@@ -67,30 +68,28 @@ const form = createForm(
     name: r.required(),
     'address.street': r.required(),
     'address.city': r.required(),
-    'address.zipCode': r.required().regex(/^\d{5}$/, 'ZIP: 5 цифр'),
+    'address.zipCode': r.required().regex(/^\d{5}$/, 'ZIP: 5 digits'),
     'profile.bio': r.maxLength(200),
-    'profile.website': r.regex(/^https?:\/\/.+/, 'Начните с http://'),
+    'profile.website': r.regex(/^https?:\/\/.+/, 'Must start with http://'),
   })
 )
 ```
 
-**Пример компонента:**
+**Component Example:**
 
 ```vue
 <template>
   <fieldset>
-    <legend>Адрес</legend>
+    <legend>Address</legend>
 
-    <!-- Строковые пути — просто и наглядно -->
     <input
       v-model="form.values.address.street"
       @blur="form.touch('address.street')"
     />
-    <span v-if="form.hasError('address.street')">{{
-      form.error('address.street')
-    }}</span>
+    <span v-if="form.hasError('address.street')">
+      {{ form.error('address.street') }}
+    </span>
 
-    <!-- objectPath() — с автодополнением TypeScript -->
     <input
       v-model="form.values.address.city"
       @blur="form.touch(form.objectPath('address', 'city'))"
